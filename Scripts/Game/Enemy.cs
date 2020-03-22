@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour
             Debug.LogError("World Logic is NULL!");
         }
 
-        //_player = _worldLogic.Player;
+        _player = _worldLogic.Player;
         _borderX = _worldLogic.BorderX;
         _borderY = _worldLogic.BorderY;
         _animator = GetComponent<Animator>();
@@ -71,7 +71,7 @@ public class Enemy : MonoBehaviour
                     _player = other.GetComponent<Player>();
                     _explosionSound.Play();
                     _player.Damage();
-                    _worldLogic.Score(5);
+                    _worldLogic.Score(_player.IsPlayerOne, 5);
                 }
                 DestroyEnemy();
                 break;
@@ -83,7 +83,7 @@ public class Enemy : MonoBehaviour
                 if (!IsDestroyed)
                 {
                     _explosionSound.Play();
-                    _worldLogic.Score(15);
+                    _worldLogic.Score(_player.IsPlayerOne, 15);
                     DestroyEnemy();
                 }
                 break;

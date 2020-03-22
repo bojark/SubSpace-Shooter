@@ -68,21 +68,21 @@ public class Powerup : MonoBehaviour
                     case 0:
                         Debug.Log("Ты подобрал щит!");
                         player.PowerupShield();
-                        _worldLogic.Score(5);
+                        _worldLogic.Score(player.IsPlayerOne, 5);
                         break;
                     case 1:
                         Debug.Log("Ты подобрал спидуху!");
                         player.PowerupSpeed(_workingTime, 3);
-                        _worldLogic.Score(5);
+                        _worldLogic.Score(player.IsPlayerOne, 5);
                         break;
                     case 2:
                         Debug.Log("Ты подобрал триплшот!");
                         player.PowerupTripleShot(_workingTime);
-                        _worldLogic.Score(5);
+                        _worldLogic.Score(player.IsPlayerOne, 5);
                         break;
                     case 3:
                         Debug.Log("Ты подобрал иридиум!");
-                        _worldLogic.Score(30);
+                        _worldLogic.Score(player.IsPlayerOne, 30);
                         break;
                     case 4:
                         Debug.Log("Ты подобрал ремонтный набор!");

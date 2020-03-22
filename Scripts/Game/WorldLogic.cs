@@ -27,10 +27,11 @@ public class WorldLogic : MonoBehaviour
     private Player _player;
     private bool _isGameOver = false;
     [SerializeField]
-    private bool _isCoop;
-    [SerializeField]
+    private bool _isCoop = false;
     private UIManager _uiManager;
     private int _score = 0;
+    private int _score2 = 0;
+    private int _highScore = 10;
 
     public float BorderY { get => _borderY; set => _borderY = value; }
     public float BorderX { get => _borderX; set => _borderX = value; }
@@ -55,6 +56,9 @@ public class WorldLogic : MonoBehaviour
         {
             Debug.LogError("UI Manager не существует!");
         }
+
+        _highScore = PlayerPrefs.GetInt("HighScore", 0);
+        _uiManager.UpdateHighScore(_highScore);
     }
 
     void Update()
@@ -72,7 +76,7 @@ public class WorldLogic : MonoBehaviour
             
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && Input.GetKeyDown(KeyCode.LeftShift))
         {
             SceneManager.LoadScene(0); // 0 — это индекс меню в игре
         }
@@ -80,10 +84,28 @@ public class WorldLogic : MonoBehaviour
 
     }
 
-    public void Score(int scoreInc)
+    public void Score(bool isPlayerOne, int scoreInc)
     {
-        _score += scoreInc;
-        Debug.Log("+" + scoreInc + " очков!");
-        _uiManager.UpdateScore(_score);
+        switch (isPlayerOne)
+        {
+            case true:
+                _score += scoreInc;
+                Debug.Log("+" + scoreInc + " очков!");
+                _uiManager.UpdateScore(_score);
+                break;
+            case false:
+                _score2 += scoreInc;
+                Debug.Log("2й игрок +" + scoreInc + " очков!");
+                _uiManager.UpdateHighScore(_score2);
+                break;
+        }
+       
+
+        if(!IsCoop && _score > _highScore)
+        {
+            _highScore = _score;
+            PlayerPrefs.SetInt("HighScore", _highScore);
+            _uiManager.UpdateHighScore(_highScore);
+        }
     }
 }

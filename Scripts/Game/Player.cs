@@ -48,31 +48,18 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _speedVisualEffect;
     [SerializeField]
-    private int _playerNum = 1;
+    private bool _isPlayerOne = false;
+    private string _horAxis;
+    private string _verAxis;
+    private KeyCode _shotBut;
+
 
     public bool Is3ShotActive { get => _is3ShotActive; set => _is3ShotActive = value; }
     public float PuWorkingTime { get => _puWorkingTime; set => _puWorkingTime = value; }
+    public bool IsPlayerOne { get => _isPlayerOne; }
 
     void Start()
     {
-        if (_worldLogic.IsCoop)
-        {
-            if(_playerNum == 1)
-            {
-                transform.position = new Vector2(-5, 0);
-            }
-            else
-            {
-                transform.position = new Vector2(5, 0);
-            }
-            
-        }
-        else
-        {
-            transform.position = new Vector2(0, 0);
-        }
-        
-        
 
         _borderX = _worldLogic.PlayerBorderX;
         _borderY = _worldLogic.PlayerBorderY;
@@ -91,15 +78,28 @@ public class Player : MonoBehaviour
             _engineDamage[i].SetActive(false);
             }
 
+        if (IsPlayerOne)
+        {
+            _horAxis = "Horizontal";
+            _verAxis = "Vertical";
+            _shotBut = KeyCode.Space;
+        }
+        else
+        {
+            _horAxis = "Horizontal2";
+            _verAxis = "Vertical2";
+            _shotBut = KeyCode.RightControl;
+        }
+
     }
 
     void Update()
     {
-        Movement();
+        Movement(_horAxis, _verAxis);
 
         //Стрельба из лазера
 
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+        if (Input.GetKeyDown(_shotBut) && Time.time > _canFire)
         {
             LaserShot();
         }
@@ -117,12 +117,13 @@ public class Player : MonoBehaviour
 
     }
 
-    void Movement() 
+    void Movement(string horAxis, string verAxis) 
     {
-        float horInput = Input.GetAxis("Horizontal");   //берём силу нажатия кнопки из инпута "Horizontal"
-        float verInput = Input.GetAxis("Vertical");     //берём силу нажатия кнопки из инпута "Vertical"
-        Vector3 direction = new Vector2(horInput * _speedX * _speedMultiplier, verInput * _speedY * _speedMultiplier);
 
+        float horInput = Input.GetAxis(horAxis);
+        float verInput = Input.GetAxis(verAxis);
+
+        Vector3 direction = new Vector2(horInput * _speedX * _speedMultiplier, verInput * _speedY * _speedMultiplier);
         transform.Translate(direction * Time.deltaTime);
 
         //Ограничиваем передвижение Player
@@ -135,8 +136,6 @@ public class Player : MonoBehaviour
         {
             transform.position = new Vector2(_borderX, transform.position.y);
         }
-
-        //передвижение по Y можно ограничить с помощью специального метода Mathf.Clamp()
 
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, _borderY, 0), 0);
 
@@ -245,13 +244,7 @@ public class Player : MonoBehaviour
         Debug.Log("Щит активен.");
     }
 
-    /*public void Score(int scoreInc)
-    {
-        _score += scoreInc;
-        Debug.Log("+" + scoreInc + " очков!");
-        _uiManager.UpdateScore(_score);
-    }
-    */
+
 
     public void Repair()
     {

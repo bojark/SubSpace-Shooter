@@ -32,6 +32,7 @@ public class Space : MonoBehaviour
             _speed = _worldLogic.SpaceSpeed;
             _spaceNum = _worldLogic.SpaceNum;
             _player = _worldLogic.Player;
+
         }
 
     }
@@ -50,7 +51,10 @@ public class Space : MonoBehaviour
         else if(transform.position.y <= _spaceDestroyY)
         {
             Debug.Log("Космос отжил своё!");
-            _worldLogic.Score(5);
+            if (!_worldLogic.IsCoop)
+            {
+                _worldLogic.Score(_player.IsPlayerOne, 5);
+            }
             Destroy(gameObject);
         }
 
