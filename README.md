@@ -4,4 +4,4 @@
 
 My tiny pet game project that I made while studying Unity in a video course by Jonathan Weinberger and Unity team.
 
-C# scripts and most of assets made by myself, but there are also some sprites provided by Jonathan. 
+C# scripts and most of assets made by myself, except sprites provided by Jonathan. 
